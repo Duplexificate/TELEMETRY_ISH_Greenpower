@@ -27,7 +27,7 @@
 
 */
 #include <SD.h>
-#include <FS.h>
+#include "FS.h"
 #include <SPI.h>
 
 #define SERIAL_BUFFER_SIZE 64
@@ -130,6 +130,23 @@ String data;
 #define TXD2 17
 int packet = 0;
 int prevTimeHC12 = 0;
+
+//DATA TRANSMISSION AND FEC
+
+//FEC Library (RS-FEC = Reed-Solomon Forward Error Correction)
+#include "RS-FEC.h"
+
+//The following variables are constants. They are placed in PROGMEM in order to save RAM.
+char STARTBYTE PROGMEM = 'S';
+char ENDBYTE PROGMEM = 'E';
+//Max message length, and "guardian bytes" for FEC, Max corrected bytes ECC_LENGTH/2
+const uint8_t ECC_LENGTH PROGMEM = 54;
+// Max message length for FEC
+const int msglen PROGMEM = 54;
+
+//Library configuration
+RS::ReedSolomon<msglen, ECC_LENGTH> rs;
+
 
 
 
